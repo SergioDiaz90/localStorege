@@ -16,7 +16,12 @@ function addTweet (e) {
 	// content test area
 	const textArea = document.querySelector('#tweet').value;
 	if (textArea !== '') {
-		return console.log('tweeteando');
+		//Obj con fecha de creación
+		const tweetObj = {'id': Date.now(), 'text': textArea};
+		listTweets = [...listTweets, tweetObj];
+		createHTML();
+		form.reset();
+		return 
 	}
 	seeError('un mensaje no puede ir vacío');
 }
@@ -35,4 +40,23 @@ function seeError (msn){
 	setTimeout(() => {
 		msnErr.remove();
 	}, 3000)
+}
+
+function createHTML() {
+	clearHTML();
+	if (listTweets.length > 0) {
+		listTweets.forEach( tweet => {
+			const li = document.createElement('li');
+			li.textContent = tweet.text;
+			tweets.appendChild(li);
+		});
+	}
+}
+
+// clear HTML
+
+function clearHTML() {
+	while (tweets.firstChild){
+		tweets.removeChild(tweets.firstChild);
+	}
 }
