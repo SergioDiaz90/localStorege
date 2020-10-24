@@ -7,7 +7,14 @@ let listTweets = [];
 eventListeners()
 
 function eventListeners() {
+	/**User add new tweet */
 	form.addEventListener('submit', addTweet);
+	/**The loaded document */
+	document.addEventListener('DOMContentLoaded', () => {
+		listTweets = JSON.parse(localStorage.getItem('tweets')) || [];
+		console.log(listTweets);
+		createHTML();
+	});
 }
 
 function addTweet (e) {
@@ -46,17 +53,38 @@ function createHTML() {
 	clearHTML();
 	if (listTweets.length > 0) {
 		listTweets.forEach( tweet => {
+			const btnDel = document.createElement('a');
+			btnDel.classList.add('borrar-tweet');
+			btnDel.textContent = 'X';
+
+			// Function eliminar
+			btnDel.onclick = () => {
+				delTweet(tweet.id);
+			}
 			const li = document.createElement('li');
 			li.textContent = tweet.text;
+			li.appendChild(btnDel);
 			tweets.appendChild(li);
 		});
 	}
+	syncStorage();
 }
 
+
+// Local-Storage
+function syncStorage() {
+	localStorage.setItem('tweets', JSON.stringify(listTweets));
+}
 // clear HTML
 
 function clearHTML() {
 	while (tweets.firstChild){
 		tweets.removeChild(tweets.firstChild);
+		console.log(tweets);
 	}
+}
+
+function delTweet(id){
+	listTweets = listTweets.filter( tweet => tweet.id !== id);
+	createHTML();
 }
